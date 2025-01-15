@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-from logic import maze_generator, strategies
+
+from generator import Generator, StrategyA
+
 app = Flask(__name__)
 
 
@@ -17,10 +19,13 @@ def generate():
         form_size = request.form["size"]
         form_s = request.form["s"]
         form_n = request.form["n"]
-        # recibir del form los factores s, n
-        mgenerator.generate(form_size)
-        mgenerator.s = form_s
-        mgenerator.n = form_n
+
+        mstrategy = StrategyA()
+        mgenerator = Generator(mstrategy)
+        mgenerator.s = int(form_s)
+        mgenerator.n = int(form_n)
+        mgenerator.generate(int(form_size))
+
         return redirect(url_for("result", size=form_size))
     else:
         return render_template("generate.html")
@@ -33,6 +38,3 @@ def result(size):
 
 if __name__ == "__main__":
     app.run(debug=True)
-    mstrategy = strategies.StrategyA()
-    # Tengo que pasarle el size al mgenerator
-    mgenerator = maze_generator.Generator(mstrategy)
