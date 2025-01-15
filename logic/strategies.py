@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from auxiliary import factors, mprint, RandomWalker
+from auxiliary import factors, mprint, find_nearest, find_farthest, connect
 from random import randint
 
 
@@ -43,10 +43,14 @@ class StrategyA(Strategy):
         mprint(maze_map)
 
         # connections (connect checkpoints)
-
-        return maze_map
+        connect(maze_map, (1, 0), find_nearest((1, 0), checkpoints))
+        connect(maze_map, (maze_s, size + 1), find_nearest((maze_s, size + 1), checkpoints))
+        for checkp in checkpoints:
+            farthest = find_farthest(checkp, checkpoints)
+            connect(maze_map, checkp, farthest)
+        mprint(maze_map)
 
 
 if __name__ == "__main__":
     strategia = StrategyA()
-    print(strategia.construct(size=10, s=5, n=2))
+    strategia.construct(size=10, s=5, n=2)
