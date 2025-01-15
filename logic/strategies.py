@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from auxiliary import factors, RandomWalker
+from auxiliary import factors, mprint, RandomWalker
 from random import randint
 
 
@@ -15,36 +15,38 @@ class StrategyA(Strategy):
     def construct(self, size: int, s: int, n: int) -> list:
 
         # preconstruction (Random Scatter)
-        maze_map = [['X' for i in range(size + 1)] for j in range(size + 1)]  # +1 por los bordes
+        maze_map = [['X' if i != 0 and i != size+1 and j != 0 and j != size+1
+                     else 'M' for i in range(size + 2)]
+                    for j in range(size + 2)]
+        mprint(maze_map)
         maze_s = min(factors(size), key=lambda x: abs(x - s))
         maze_n = min(n, maze_s - 1)
 
         maze_map[1][0] = ' '  # entrada
-        maze_map[maze_s][size] = ' '  # salida
+        maze_map[maze_s][size+1] = ' '  # salida
 
         y = 1
-        f = size / maze_s
+        f = size // maze_s
+        print(maze_s, maze_n, f)
+        checkpoints = []
         for i in range(f):
-            x = 1
-            for j in range(maze_n):
-                for k in range(f):
-                    maze_map[randint(y, y + maze_s)
-                             # (0,0) es arriba a la izq
-                             ][randint(x, x + maze_s)] = ' '
+            for j in range(f):
+                x = 1
+                for k in range(maze_n):
+                    print(y, x)
+                    rand_y = randint(y, y + maze_s - 1)
+                    rand_x = randint(x, x + maze_s - 1)
+                    maze_map[rand_y][rand_x] = ' '
+                    checkpoints.append((rand_y, rand_x))
                     x += maze_s
             y += maze_s
+        mprint(maze_map)
 
-        # connections
-        walker1 = RandomWalker((1, 0), size)
-        walker2 = RandomWalker((maze_s, size), size)
-        seguir = True
-        while seguir:  # o usar threading
-            walker1.walk()
-            walker2.walk()
-            if walker1.position == walker2.position:
-                maze_map[walker1.position[0]][walker1.position[1]]
-                break
-            maze_map[walker1.position[0]][walker1.position[1]] = ' '
-            maze_map[walker2.position[0]][walker2.position[1]] = ' '
+        # connections (connect checkpoints)
 
         return maze_map
+
+
+if __name__ == "__main__":
+    strategia = StrategyA()
+    print(strategia.construct(size=10, s=5, n=2))
