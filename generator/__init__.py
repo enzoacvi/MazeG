@@ -1,1 +1,1 @@
-from .generator_strategies import Generator, StrategyA
+from .generator_strategies import Generator, StrategyA, StrategyB

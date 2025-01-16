@@ -15,8 +15,8 @@ class RandomWalker(Walker):
         self._position = initial_pos
         self._recent_path = set()
         self._maze_size = maze_size
-        self._directions = {'up': 1, 'down': self._maze_size + 1,
-                            'left': 1, 'right': self._maze_size + 1}
+        self._directions = {"up": 1, "down": self._maze_size + 1,
+                            "left": 1, "right": self._maze_size + 1}
 
     @property
     def position(self) -> tuple:
@@ -36,11 +36,11 @@ class RandomWalker(Walker):
                 posibilities.append(key)
         shuffle(posibilities)
 
-        if posibilities[0] == 'up':
+        if posibilities[0] == "up":
             self._position = (self._position[0], self._position[1] - 1)
-        elif posibilities[0] == 'down':
+        elif posibilities[0] == "down":
             self._position = (self._position[0], self._position[1] + 1)
-        elif posibilities[0] == 'left':
+        elif posibilities[0] == "left":
             self._position = (self._position[0] - 1, self._position[1])
-        elif posibilities[0] == 'right':
+        elif posibilities[0] == "right":
             self._position = (self._position[0] + 1, self._position[1])

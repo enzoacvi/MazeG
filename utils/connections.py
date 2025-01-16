@@ -16,7 +16,7 @@ def connect(maze: list, ckp1: tuple, ckp2: tuple):
                     checkp2[1] = checkp2[1] + 1
                 elif checkp1[1] < checkp2[1]:
                     checkp2[1] = checkp2[1] - 1
-            maze[checkp2[0]][checkp2[1]] = ' '
+            maze[checkp2[0]][checkp2[1]] = " "
         else:  # cambiar direccion
             if direccion:
                 direccion = False

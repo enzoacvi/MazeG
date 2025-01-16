@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 
-from generator import Generator, StrategyA
+from generator import Generator, StrategyA, StrategyB
 
 app = Flask(__name__)
 
@@ -19,21 +19,27 @@ def generate():
         form_size = request.form["size"]
         form_s = request.form["s"]
         form_n = request.form["n"]
+        form_strategy = request.form["strategy"]
 
-        mstrategy = StrategyA()
-        mgenerator = Generator(mstrategy)
-        mgenerator.s = int(form_s)
-        mgenerator.n = int(form_n)
-        mgenerator.generate(int(form_size))
-
-        return redirect(url_for("result", size=form_size))
+        return redirect(url_for("result", strategy=form_strategy,
+                                size=form_size, s=form_s, n=form_n))
     else:
         return render_template("generate.html")
 
 
-@app.route("/result/<size>")
-def result(size):
-    return render_template("result.html", result=size)
+@app.route("/result/<strategy>/<size>/<s>/<n>")
+def result(strategy, size, s, n):
+    if strategy == '1':
+        mstrategy = StrategyA()
+    elif strategy == '2':
+        mstrategy = StrategyB()
+
+    mgenerator = Generator(mstrategy)
+    mgenerator.s = int(s)
+    mgenerator.n = int(n)
+    maze_result = mgenerator.generate(int(size))
+
+    return render_template("result.html", result=maze_result)
 
 
 if __name__ == "__main__":
