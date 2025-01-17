@@ -84,6 +84,36 @@ class StrategyB(Strategy):
         return maze_map
 
 
+class StrategyC(Strategy):
+
+    def construct(self, size: int, s: int, n: int) -> list:
+
+        # preconstruction (Random Scatter)
+        maze_s = min(utils.factors(size), key=lambda x: abs(x - s))
+        maze_n = min(n, maze_s - 1)
+        maze_map = [["X" if i != 0 and i != size + 1 and j != 0 and j != size + 1
+                     else "M" for i in range(size + 2)]
+                    for j in range(size + 2)]
+        maze_map[1][0] = " "  # entrada
+        maze_map[maze_s][size+1] = " "  # salida
+
+        checkpoints = utils.set_checkpoints(maze_map, size, maze_s, maze_n)
+
+        # connections (connect checkpoints)
+        utils.connect(maze_map, (1, 0),
+                      utils.find_nearest((1, 0), checkpoints))
+        utils.connect(maze_map, (maze_s, size + 1),
+                      utils.find_nearest((maze_s, size + 1), checkpoints))
+        for checkp in checkpoints:
+            N_connections = 2
+            nearests = utils.find_nearests(checkp, checkpoints, N=N_connections)
+            # conectamos con los más cercanos
+            for i in range(N_connections):
+                utils.connect(maze_map, checkp, nearests[i])
+
+        return maze_map
+
+
 if __name__ == "__main__":
     strategia = StrategyA()
     strategia.construct(size=10, s=5, n=2)

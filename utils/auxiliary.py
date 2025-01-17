@@ -28,16 +28,36 @@ def find_farthest(ckp: tuple, checkpoints: list) -> tuple:
 
 
 def find_nearest(ckp: tuple, checkpoints: list) -> tuple:
-    if ckp in checkpoints:
-        checkpoints.remove(ckp)
+    ckps = list(checkpoints)
+    if ckp in ckps:
+        ckps.remove(ckp)
     nearest = None
     n_distance = 1000
-    for ckp2 in checkpoints:
+    for ckp2 in ckps:
         distance = round(dist(ckp, ckp2), 3)
         if distance < n_distance:
             nearest = ckp2
             n_distance = distance
     return nearest
+
+
+def find_nearests(ckp: tuple, checkpoints: list, N: int) -> tuple:
+    ckps = list(checkpoints)
+    if ckp in ckps:
+        ckps.remove(ckp)
+
+    nearest_list = []
+    for i in range(N):
+        nearest = None
+        n_distance = 1000
+        for ckp2 in ckps:
+            distance = round(dist(ckp, ckp2), 3)
+            if distance < n_distance:
+                nearest = ckp2
+                n_distance = distance
+        nearest_list.append(nearest)
+        ckps.remove(nearest)
+    return nearest_list
 
 
 def set_checkpoints(maze_map: list, size: int, maze_s: int, maze_n: int) -> list:

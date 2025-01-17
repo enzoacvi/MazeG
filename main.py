@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 
-from generator import Generator, StrategyA, StrategyB
+from generator import Generator, StrategyA, StrategyB, StrategyC
 
 app = Flask(__name__)
 
@@ -33,6 +33,8 @@ def result(strategy, size, s, n):
         mstrategy = StrategyA()
     elif strategy == '2':
         mstrategy = StrategyB()
+    elif strategy == '3':
+        mstrategy = StrategyC()
 
     mgenerator = Generator(mstrategy)
     mgenerator.s = int(s)
