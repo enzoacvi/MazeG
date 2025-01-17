@@ -43,15 +43,22 @@ def find_nearest(ckp: tuple, checkpoints: list) -> tuple:
 def set_checkpoints(maze_map: list, size: int, maze_s: int, maze_n: int) -> list:
     y = 1
     f = size // maze_s
-    checkpoints = []
+    checkpoints_y = []
+    checkpoints_x = []
     for i in range(f):
         x = 1
         for j in range(f):
             for k in range(maze_n):
                 rand_y = randint(y, y + maze_s - 1)
                 rand_x = randint(x, x + maze_s - 1)
+
+                while rand_y in checkpoints_y[-maze_n - 1:] or rand_x in checkpoints_x[-maze_n - 1:]:
+                    rand_y = randint(y, y + maze_s - 1)
+                    rand_x = randint(x, x + maze_s - 1)
+
                 maze_map[rand_y][rand_x] = " "
-                checkpoints.append((rand_y, rand_x))
+                checkpoints_y.append(rand_y)
+                checkpoints_x.append(rand_x)
             x += maze_s
         y += maze_s
-    return checkpoints
+    return list(zip(checkpoints_y, checkpoints_x))
