@@ -21,21 +21,23 @@ def generate():
         form_size = request.form["size"]
         form_s = request.form["s"]
         form_n = request.form["n"]
+        form_N = request.form["N"]
         form_strategy = request.form["strategy"]
 
         return redirect(url_for("result", strategy=form_strategy,
-                                size=form_size, s=form_s, n=form_n))
+                                size=form_size, s=form_s, n=form_n, N=form_N))
     else:
         return render_template("generate.html", strategies=strategies)
 
 
-@app.route("/result/<strategy>/<size>/<s>/<n>")
-def result(strategy, size, s, n):
+@app.route("/result/<strategy>/<size>/<s>/<n>/<N>")
+def result(strategy, size, s, n, N):
 
     mstrategy = strategies[strategy]
     mgenerator = Generator(mstrategy)
     mgenerator.s = int(s)
     mgenerator.n = int(n)
+    mgenerator.N_connections = int(N)
     maze_result = mgenerator.generate(int(size))
 
     return render_template("result.html", result=maze_result)

@@ -15,6 +15,7 @@ class Generator:
         self._strategy = strategy
         self.s = None
         self.n = None
+        self.N_connections = 2
 
     @property
     def strategy(self) -> Strategy:
@@ -25,12 +26,12 @@ class Generator:
         self._strategy = new_strategy
 
     def generate(self, size: int):
-        return self._strategy.construct(size, s=self.s, n=self.n)
+        return self._strategy.construct(size, s=self.s, n=self.n, N=self.N_connections)
 
 
 class StrategyA(Strategy):
 
-    def construct(self, size: int, s: int, n: int) -> list:
+    def construct(self, size: int, s: int, n: int, N: int) -> list:
 
         # preconstruction (Random Scatter)
         maze_s = min(utils.factors(size), key=lambda x: abs(x - s))
@@ -41,7 +42,7 @@ class StrategyA(Strategy):
 
         checkpoints = utils.set_checkpoints(maze_map, size, maze_s, maze_n)
 
-        # connections (connect checkpoints)
+        # connections (connect checkpoints with farthest)
         utils.connect(maze_map, (1, 0),
                       utils.find_nearest((1, 0), checkpoints))
         utils.connect(maze_map, (maze_s, size - 1),
@@ -59,7 +60,7 @@ class StrategyA(Strategy):
 
 class StrategyB(Strategy):
 
-    def construct(self, size: int, s: int, n: int) -> list:
+    def construct(self, size: int, s: int, n: int, N: int) -> list:
 
         # preconstruction (Random Scatter)
         maze_s = min(utils.factors(size), key=lambda x: abs(x - s))
@@ -88,7 +89,7 @@ class StrategyB(Strategy):
 
 class StrategyC(Strategy):
 
-    def construct(self, size: int, s: int, n: int) -> list:
+    def construct(self, size: int, s: int, n: int, N: int) -> list:
 
         # preconstruction (Random Scatter)
         maze_s = min(utils.factors(size), key=lambda x: abs(x - s))
@@ -105,11 +106,10 @@ class StrategyC(Strategy):
         utils.connect(maze_map, (maze_s, size - 1),
                       utils.find_nearest((maze_s, size - 1), checkpoints))
         for checkp in checkpoints:
-            N_connections = 2
             nearests = utils.find_nearests(
-                checkp, checkpoints, N=N_connections)
+                checkp, checkpoints, N)
             # conectamos con los más cercanos
-            for i in range(N_connections):
+            for i in range(N):
                 utils.connect(maze_map, checkp, nearests[i])
 
         maze_map = utils.set_external_walls(maze_map, size)
