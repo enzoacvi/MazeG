@@ -10,8 +10,9 @@
         </div>
         <div class="home-div">
             <h2 class="home-h2"> Generator Strategies </h2>
-            <h3 class="home-h3">Strategy A</h3>
-            <h3 class="home-h3">Strategy B</h3>
+            {% for key in strategies.keys() %}
+                <h3 class="home-h3">{{key}}</h3>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}

@@ -4,13 +4,15 @@ from generator import Generator, StrategyA, StrategyB, StrategyC
 
 app = Flask(__name__)
 
+strategies = {"Strategy A": StrategyA(), "Strategy B": StrategyB(), "Strategy C": StrategyC()}
+
 
 @app.route("/", methods=["POST", "GET"])
 def home():
     if request.method == "POST":
         redirect(url_for("generate"))
     else:
-        return render_template("home.html")
+        return render_template("home.html", strategies=strategies)
 
 
 @app.route("/generate", methods=["POST", "GET"])
@@ -24,18 +26,13 @@ def generate():
         return redirect(url_for("result", strategy=form_strategy,
                                 size=form_size, s=form_s, n=form_n))
     else:
-        return render_template("generate.html")
+        return render_template("generate.html", strategies=strategies)
 
 
 @app.route("/result/<strategy>/<size>/<s>/<n>")
 def result(strategy, size, s, n):
-    if strategy == '1':
-        mstrategy = StrategyA()
-    elif strategy == '2':
-        mstrategy = StrategyB()
-    elif strategy == '3':
-        mstrategy = StrategyC()
 
+    mstrategy = strategies[strategy]
     mgenerator = Generator(mstrategy)
     mgenerator.s = int(s)
     mgenerator.n = int(n)
